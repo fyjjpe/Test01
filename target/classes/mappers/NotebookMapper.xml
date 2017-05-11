@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="cn.tedu.note.dao.NotebookDao">
+	<select id="findNotebooksByUserId" parameterType="string" resultType="map">
+		select
+			cn_notebook_id as id,
+			cn_notebook_name as name
+		from
+			cn_notebook
+		where
+			cn_user_id=#{userId}
+	</select>
+	
+	<select id="findNotebookById" parameterType="string" 
+				resultType="cn.tedu.note.entity.Notebook">
+		select
+			cn_notebook_id as id,
+			cn_user_id as userId,
+			cn_notebook_type_id as typeId,
+			cn_notebook_name as name,
+			cn_notebook_desc as "desc",
+			cn_notebook_createtime as createtime
+		from
+			cn_notebook
+		where
+			cn_notebook_id =#{id}
+	</select>
+	
+	<insert id="addNotebook" parameterType="cn.tedu.note.entity.Notebook">
+		insert into cn_notebook
+			(cn_notebook_id,cn_user_id,cn_notebook_type_id,
+			cn_notebook_name,cn_notebook_desc,cn_notebook_createtime)
+		values
+			(#{id},#{userId},#{typeId},#{name},#{desc},#{createtime})
+	</insert>
+	
+	<delete id="deleteNoteBookById" parameterType="string">
+		delete from 
+			cn_notebook
+		where 
+			cn_notebook_id=#{id}
+	</delete>
+	
+	<!-- 实现分页查询
+		myBatis支持动态表名:使用${}符号,见下面
+		 -->
+	<select id="findNotebooksByParam" parameterType="map" resultType="map">
+		select
+			cn_notebook_id as id,
+			cn_notebook_name as name
+		from
+			${tableName}
+		where 
+			cn_user_id=#{userId}
+		<if test="start != null">
+		limit
+			#{start},#{rows}
+		</if>
+	</select>
+	
+	
+</mapper>

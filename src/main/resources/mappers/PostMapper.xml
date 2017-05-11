@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="cn.tedu.note.dao.PostDao">
+
+	<resultMap type="cn.tedu.note.entity.Post" id="postMap">
+		<id property="id" column="id"/>
+		<result property="content" column="content"/>
+		<result property="time" column="time"/>
+		<!-- 关联映射 -->
+		<!-- 第一种:进行实体类映射 -->
+		<association property="person" javaType="cn.tedu.note.entity.Person">
+			<id property="id" column="personId"/>
+			<result property="name" column="name"/>
+			<result property="age" column="age"/>
+		</association>
+		<!-- 第二种:进行集合属性映射 -->
+		<collection property="comments" select="findCommentsByPostId" column="id">
+		</collection>
+	</resultMap>
+	<!-- 关联查询 -->
+	<select id="findPostById" parameterType="int" resultMap="postMap">
+		select
+			post_id as id,
+			post_content as content,
+			post_time as time,
+			po.person_id as personId,
+			pe.person_name as name,
+			pe.person_age as age
+		from 
+			post po
+		left join 
+			person pe 
+		on 
+			po.person_id=pe.person_id
+		where
+			post_id=#{id}
+	</select>
+
+	<select id="findCommentsByPostId" resultType="cn.tedu.note.entity.Comment">
+		select
+			comment_id as id,
+			comment_content as content
+		from
+			comment
+		where	
+			post_id=#{postId}
+	</select>
+
+	
+</mapper>

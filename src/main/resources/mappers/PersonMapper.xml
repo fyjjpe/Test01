@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="cn.tedu.note.dao.PersonDao">
+	<!-- 测试myBatis对自增类型key的支持 -->
+	<insert id="savePerson" 
+	parameterType="cn.tedu.note.entity.Person"
+	useGeneratedKeys="true" keyProperty="id">
+		insert into person(
+			person_id,
+			person_name,
+			person_age
+		)values(
+			null,#{name},#{age}
+		)
+	</insert>
+
+	
+</mapper>
